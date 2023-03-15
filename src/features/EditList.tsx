@@ -25,7 +25,15 @@ const EditList = ({ listData, owner = "", items, id }: EditListProps) => {
     listData?.title !== title ||
       listData?.description !== description ||
       items.length !== listItems.length ||
-      items.some((item, index) => item.text !== listItems[index].text)
+      items.some((item, index) => {
+        const oldItem = listItems[index];
+
+        if (oldItem) {
+          return item.text !== oldItem.text;
+        } else {
+          return true;
+        }
+      })
   );
 
   const [shouldShowDescription, setShouldShowDescription] = useState(
@@ -98,7 +106,7 @@ const EditList = ({ listData, owner = "", items, id }: EditListProps) => {
   function copyLink() {
     if (window) {
       const link = `${window.location.host}/${id}`;
-      navigator.clipboard.writeText(link);
+      void navigator.clipboard.writeText(link);
       setHasCopied(true);
 
       setTimeout(() => {
@@ -204,8 +212,14 @@ const EditList = ({ listData, owner = "", items, id }: EditListProps) => {
                   }}
                   onChange={(e) => {
                     const newListItems = [...listItems];
-                    newListItems[index].text = e.target.value;
-                    setListItems(newListItems);
+                    const valueToUpdate = newListItems[index];
+
+                    if (valueToUpdate) {
+                      valueToUpdate.text = e.target.value;
+
+                      newListItems[index] = valueToUpdate;
+                      setListItems(newListItems);
+                    }
                   }}
                 />
                 <button
