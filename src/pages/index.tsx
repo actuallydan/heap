@@ -205,6 +205,7 @@ const Home: NextPage = () => {
               className={`mt-3 w-full rounded ${
                 data?.visitorId ? "bg-violet-500" : "bg-violet-300"
               } p-2 text-white`}
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onClick={createList}
             >
               create
